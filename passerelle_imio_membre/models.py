@@ -11,6 +11,7 @@ class ConnectorMembre(BaseResource):
     """
     Connector Membre
     """
+
     api_description = "Connecteur pour les membres iMio"
     category = "Connecteurs iMio"
 
@@ -49,12 +50,15 @@ class ConnectorMembre(BaseResource):
         pattern="^list",
         example_pattern="list",
     )
-    def get_membres(self, request,):
+    def get_membres(
+        self,
+        request,
+    ):
         username = self.username
         password = self.password
         if not getattr(settings, "KNOWN_SERVICES", {}).get("wcs"):
             return "error"
-        eservices = list(settings.KNOWN_SERVICES["wcs"].values())[0]['url']
+        eservices = list(settings.KNOWN_SERVICES["wcs"].values())[0]["url"]
 
         url = f"{eservices}api/cards/{self.slug_card}/list"
         headers = {"Content-Type": "application/json"}
@@ -87,12 +91,12 @@ class ConnectorMembre(BaseResource):
         password = self.password
         if not getattr(settings, "KNOWN_SERVICES", {}).get("wcs"):
             return "error"
-        eservices = list(settings.KNOWN_SERVICES["wcs"].values())[0]['url']
+        eservices = list(settings.KNOWN_SERVICES["wcs"].values())[0]["url"]
 
         url = f"{eservices}api/cards/{self.slug_card}/list"
         headers = {"Content-Type": "application/json"}
         auth = (username, password)
-        payload = {"filter-organisation": organisation}
+        payload = {"filter-organisation": organisation, "full": "on"}
 
         response = requests.get(url=url, headers=headers, auth=auth, params=payload)
         response.raise_for_status()
