@@ -53,8 +53,8 @@ class ConnectorMembre(BaseResource):
         username = self.username
         password = self.password
         if not getattr(settings, "KNOWN_SERVICES", {}).get("wcs"):
-            return
-        eservices = list(settings.KNOWN_SERVICES["wcs"].values())[0]
+            return "error"
+        eservices = list(settings.KNOWN_SERVICES["wcs"].values())[0]['url']
 
         url = f"{eservices}api/cards/{self.slug_card}/list"
         headers = {"Content-Type": "application/json"}
@@ -86,14 +86,15 @@ class ConnectorMembre(BaseResource):
         username = self.username
         password = self.password
         if not getattr(settings, "KNOWN_SERVICES", {}).get("wcs"):
-            return
-        eservices = list(settings.KNOWN_SERVICES["wcs"].values())[0]
+            return "error"
+        eservices = list(settings.KNOWN_SERVICES["wcs"].values())[0]['url']
 
-        url = f"{eservices}api/cards/{self.slug_card}/list?filter-organisation={organisation}"
+        url = f"{eservices}api/cards/{self.slug_card}/list"
         headers = {"Content-Type": "application/json"}
         auth = (username, password)
+        payload = {"filter-organisation": organisation}
 
-        response = requests.get(url=url, headers=headers, auth=auth)
+        response = requests.get(url=url, headers=headers, auth=auth, params=payload)
         response.raise_for_status()
 
         return response.json()
